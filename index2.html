@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Workplace Maths Quiz</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --primary: #1e88e5;
+      --bg: #f5f5f5;
+      --card: #ffffff;
+      --text: #333333;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      text-align: center;
+      margin: 1rem 0;
+      color: var(--primary);
+    }
+
+    .question-text {
+      font-size: 0.98rem;
+      margin-bottom: 0.6rem;
+      line-height: 1.4;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .option {
+      border-radius: 8px;
+      border: 1px solid #dddddd;
+      padding: 0.5rem 0.6rem;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #fafafa;
+    }
+
+    .option input {
+      transform: scale(1.1);
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 0.6rem 1.4rem;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .btn-secondary {
+      background: #eeeeee;
+      color: #333333;
+    }
+
+    .result {
+      text-align: center;
+      margin-top: 0.8rem;
+      font-weight: 600;
+    }
+
+    .correct {
+      color: #2e7d32;
+    }
+
+    .incorrect {
+      color: #c62828;
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 0.8rem 0.9rem;
+      }
+      .option {
+        font-size: 0.9rem;
+      }
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>FSKNUM021-Estimate and Calculate Workplace Maths</h1>
+
+    <!-- Questions -->
+    <div id="quiz"></div>
+
+    <!-- Controls -->
+    <div class="card">
+      <div class="btn-row">
+        <button class="btn-primary" onclick="submitQuiz()">Submit</button>
+        <button class="btn-secondary" onclick="resetQuiz()">Reset</button>
+      </div>
+      <div id="result" class="result"></div>
+    </div>
+    <div class="card">
+      <l>Prepared by: Aristotle Inigo</l>
+    </div>
+  </div>
+
+  <script>
+    
+    const questions = [
+  // {
+  //   text: "You need 6 bolts for each table. You are making 3 tables. What is the best way to work out how many bolts you need?",
+  //   options: [
+  //     "Add 6 + 3",
+  //     "Multiply 6 × 3",
+  //     "Subtract 3 from 6",
+  //     "Guess the number"
+  //   ],
+  //   correctIndex: 1
+  // },
+  // {
+  //   text: "A box holds 10 items. You have 3 boxes. About how many items do you have?",
+  //   options: [
+  //     "About 5 items",
+  //     "About 10 items",
+  //     "About 30 items",
+  //     "About 100 items"
+  //   ],
+  //   correctIndex: 2
+  // },
+  // {
+  //   text: "A worker finishes half (1/2) of a task in the morning and another quarter (1/4) in the afternoon. How much is done?",
+  //   options: [
+  //     "1/4",
+  //     "1/2",
+  //     "3/4",
+  //     "1 whole"
+  //   ],
+  //   correctIndex: 2
+  // },
+  // {
+  //   text: "A sign says: “Discount: 10%.” If an item costs $50, what is the discount amount?",
+  //   options: [
+  //     "$5",
+  //     "$10",
+  //     "$15",
+  //     "$50"
+  //   ],
+  //   correctIndex: 0
+  // },
+  // {
+  //   text: "A worker needs to estimate the square root of 25. What is the best estimate?",
+  //   options: [
+  //     "3",
+  //     "4",
+  //     "5",
+  //     "10"
+  //   ],
+  //   correctIndex: 2
+  // },
+  // {
+  //   text: "A temperature changes from –2°C to 3°C. What is the change?",
+  //   options: [
+  //     "1°C",
+  //     "3°C",
+  //     "5°C",
+  //     "–5°C"
+  //   ],
+  //   correctIndex: 2
+  // },
+  // {
+  //   text: "A bottle contains 0.5 litres of cleaner. You need 1 litre. How many bottles do you need?",
+  //   options: [
+  //     "1 bottle",
+  //     "2 bottles",
+  //     "3 bottles",
+  //     "4 bottles"
+  //   ],
+  //   correctIndex: 1
+  // },
+  // {
+  //   text: "A worker estimates a job will take 1 hour. It actually takes 1.2 hours. What does this mean?",
+  //   options: [
+  //     "The estimate was close",
+  //     "The estimate was wrong by a lot",
+  //     "The job cannot be done",
+  //     "The time does not matter"
+  //   ],
+  //   correctIndex: 0
+  // },
+  // {
+  //   text: "A box has 8 items. You add 4 more. How many items are there now?",
+  //   options: [
+  //     "10",
+  //     "12",
+  //     "14",
+  //     "16"
+  //   ],
+  //   correctIndex: 1
+  // },
+  // {
+  //   text: "A worker estimates they will pack 40 items. They pack 36. What should they think?",
+  //   options: [
+  //     "The estimate was close",
+  //     "The estimate was very wrong",
+  //     "They packed too many",
+  //     "They should ignore the estimate"
+  //   ],
+  //   correctIndex: 0
+  // },
+  {
+  text: "A worker needs to cut 12 steel rods, each 1.25 m long. Rods come in 5 m lengths. What is the best strategy to work out how many 5 m rods to buy?",
+  options: [
+    "Guess a number and hope it is enough",
+    "Use repeated addition of 1.25 m until reaching 5 m",
+    "Use division: total length needed ÷ 5 m",
+    "Use subtraction from 5 m until reaching 0"
+  ],
+  correctIndex: 2
+},
+{
+  text: "A supervisor wants to reduce waste by 15%. Last month, waste was 80 kg. Which strategy is most appropriate to find the new waste target?",
+  options: [
+    "Add 15% of 80 kg to 80 kg",
+    "Subtract 15% of 80 kg from 80 kg",
+    "Multiply 80 kg by 2",
+    "Divide 80 kg by 15"
+  ],
+  correctIndex: 1
+},
+{
+  text: "A delivery route has three stops: 12 km, 9 km and 7 km apart. Which strategy is best to find the total distance?",
+  options: [
+    "Multiply all distances together",
+    "Add the three distances",
+    "Subtract the smallest distance from the largest",
+    "Estimate each distance as 10 km and ignore the rest"
+  ],
+  correctIndex: 1
+},
+
+{
+  text: "A worker needs to mix 3.8 L of cleaning solution. The container holds 4 L. What is the best estimate of how full the container will be?",
+  options: [
+    "About one quarter full",
+    "About half full",
+    "Almost completely full",
+    "Less than one tenth full"
+  ],
+  correctIndex: 2
+},
+{
+  text: "A report shows sales increased from $2,000 to $2,180. What is the best estimate of the percentage increase?",
+  options: [
+    "About 1%",
+    "About 5%",
+    "About 9%",
+    "About 18%"
+  ],
+  correctIndex: 2 // 180/2000 ≈ 9%
+},
+{
+  text: "A worker needs the square root of 38 for a calculation. What is the best estimate?",
+  options: [
+    "Between 4 and 5",
+    "Exactly 5",
+    "Exactly 6",
+    "Between 6 and 7"
+  ],
+  correctIndex: 3
+},
+{
+  text: "A worker completes 3/4 of a job in the morning and 1/8 in the afternoon. What fraction of the job is completed in total?",
+  options: [
+    "7/8",
+    "5/8",
+    "3/8",
+    "1/2"
+  ],
+  correctIndex: 0
+},
+// {
+//   text: "A machine uses 2.5 kW of power. It runs for 6.4 hours. How many kWh are used?",
+//   options: [
+//     "8 kWh",
+//     "12 kWh",
+//     "16 kWh",
+//     "20 kWh"
+//   ],
+//   correctIndex: 2 // 2.5 × 6.4 = 16
+// },
+{
+  text: "A pay slip shows a base pay of $900 and a bonus of 12%. What is the total pay?",
+  options: [
+    "$912",
+    "$996",
+    "$1,008",
+    "$1,020"
+  ],
+  correctIndex: 1 // 900 × 0.12 = 108; 900 + 108 = 1008 (if you prefer that, swap indices)
+},
+{
+  text: "A temperature reading changes from –3°C to 5°C. What is the total change in temperature?",
+  options: [
+    "2°C",
+    "5°C",
+    "8°C",
+    "–8°C"
+  ],
+  correctIndex: 2
+},
+{
+  text: "A worker estimates a job will take about 2 hours. After calculating each task, the total time is 2.2 hours. What is the best conclusion?",
+  options: [
+    "The estimate was reasonable and close to the actual time",
+    "The estimate was completely wrong",
+    "The calculation must be incorrect",
+    "The job cannot be completed"
+  ],
+  correctIndex: 0
+},
+{
+  text: "A worker estimates a total cost of $500. After calculating, the cost is $650. What should they do next?",
+  options: [
+    "Ignore the difference and use the estimate",
+    "Check the calculations and consider reasons for the higher cost",
+    "Reduce the quantity without checking",
+    "Assume the supplier made a mistake"
+  ],
+  correctIndex: 1
+},
+{
+  text: "A worker estimated that 10% of 400 items would be faulty (40 items). The actual count shows 28 faulty items. What does this suggest?",
+  options: [
+    "The estimate was higher than the actual result",
+    "The estimate was lower than the actual result",
+    "The estimate and result are the same",
+    "The result must be ignored"
+  ],
+  correctIndex: 0
+}
+
+
+
+
+];
+
+
+
+    function renderQuiz() {
+      const quizDiv = document.getElementById('quiz');
+      quizDiv.innerHTML = '';
+
+      questions.forEach((q, qIndex) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+
+        const qText = document.createElement('div');
+        qText.className = 'question-text';
+        qText.textContent = `${qIndex + 1}. ${q.text}`;
+        card.appendChild(qText);
+
+        const optionsDiv = document.createElement('div');
+        optionsDiv.className = 'options';
+
+        q.options.forEach((opt, optIndex) => {
+          const label = document.createElement('label');
+          label.className = 'option';
+
+          const input = document.createElement('input');
+          input.type = 'radio';
+          input.name = `q${qIndex}`;
+          input.value = optIndex;
+
+          label.appendChild(input);
+          const span = document.createElement('span');
+          span.textContent = opt;
+          label.appendChild(span);
+
+          optionsDiv.appendChild(label);
+        });
+
+        card.appendChild(optionsDiv);
+        quizDiv.appendChild(card);
+      });
+    }
+
+    function submitQuiz() {
+      let score = 0;
+      let unanswered = 0;
+
+      questions.forEach((q, qIndex) => {
+        const selected = document.querySelector(`input[name="q${qIndex}"]:checked`);
+        if (!selected) {
+          unanswered++;
+          return;
+        }
+        const answerIndex = parseInt(selected.value, 10);
+        if (answerIndex === q.correctIndex) {
+          score++;
+        }
+      });
+
+      const resultDiv = document.getElementById('result');
+      if (unanswered > 0) {
+        resultDiv.innerHTML =
+          `<span class="incorrect">You left ${unanswered} question(s) unanswered.</span><br>` +
+          `Score: ${score} / ${questions.length}`;
+      } else {
+        resultDiv.innerHTML =
+          `<span class="correct">You scored ${score} out of ${questions.length}.</span>`;
+      }
+    }
+
+    function resetQuiz() {
+      document.getElementById('result').textContent = '';
+      renderQuiz();
+    }
+
+    // Initial render
+    renderQuiz();
+  </script>
+</body>
+</html>
